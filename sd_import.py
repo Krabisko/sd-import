@@ -21,6 +21,7 @@ Usage:
 """
 
 import argparse
+import atexit
 import datetime as dt
 import json
 import os
@@ -83,6 +84,13 @@ def human(n):
         if n < 1024 or unit == "TB":
             return f"{n:.1f} {unit}" if unit != "B" else f"{n} B"
         n /= 1024
+
+
+def pause():
+    try:
+        input("\nPress Enter to close.")
+    except (EOFError, KeyboardInterrupt):
+        pass
 
 
 def notify(summary, body=""):
@@ -320,7 +328,11 @@ def main():
     parser.add_argument("source", nargs="*", help="card mount point(s) or folder(s); auto-detected if omitted")
     parser.add_argument("--dry-run", action="store_true", help="show the plan without copying")
     parser.add_argument("--date", help="import date YYYY-MM-DD (default: today)")
+    parser.add_argument("--pause", action="store_true",
+                        help="wait for Enter before exiting (keeps a launcher's terminal window open)")
     args = parser.parse_args()
+    if args.pause:
+        atexit.register(pause)
 
     if not LIBRARY.parent.is_dir():
         sys.exit(f"Library drive not mounted: {LIBRARY.parent}")
@@ -351,7 +363,10 @@ def main():
             subprocess.run(["udisksctl", "power-off", "-b", cd["device"]], capture_output=True)
 
     if shutil.which("xdg-open") and ask("Open the import folder? (y/N)", "n").lower() in ("y", "yes"):
-        subprocess.Popen(["xdg-open", str(base)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # Own session: otherwise the terminal's hangup on exit kills xdg-open before the
+        # file manager starts (seen on COSMIC, where xdg-open takes the slower generic path).
+        subprocess.Popen(["xdg-open", str(base)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         start_new_session=True)
 
 
 if __name__ == "__main__":

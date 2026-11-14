@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Opens sd-import in a terminal window for the app-menu and device-notifier launchers.
+# Prefers xdg-terminal-exec (COSMIC Terminal on COSMIC), falls back to Konsole.
+if command -v xdg-terminal-exec >/dev/null; then
+  exec xdg-terminal-exec sd-import --pause "$@"
+fi
+exec konsole -e sd-import --pause "$@"

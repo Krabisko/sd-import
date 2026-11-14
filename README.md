@@ -24,7 +24,7 @@ Photo & Video/02_clients/<YYYY>/<YYYY-MM-DD[ name]>/
 ./install.sh
 ```
 
-This links `sd-import` into `~/.local/bin`, adds an **SD Import** app-menu entry and a
+This links `sd-import` and `sd-import-launch` into `~/.local/bin`, adds an **SD Import** app-menu entry (opens in `xdg-terminal-exec` if present, e.g. COSMIC Terminal, else Konsole) and a
 KDE device-notifier action that appears when a card is inserted.
 
 ## Usage
