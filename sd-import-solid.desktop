@@ -4,6 +4,6 @@ Type=Service
 Actions=import;
 
 [Desktop Action import]
-Exec=sd-import-launch "%f"
+Exec=sd-import "%f"
 Icon=camera-photo
 Name=Import photos & videos (SD Import)

@@ -2,7 +2,7 @@
 Type=Application
 Name=SD Import
 Comment=Import photos and videos from SD cards into the Photo & Video library
-Exec=sd-import-launch
+Exec=sd-import
 Icon=camera-photo
 Terminal=false
 Categories=Graphics;Photography;
